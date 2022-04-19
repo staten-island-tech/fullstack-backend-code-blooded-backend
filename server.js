@@ -13,10 +13,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} is connected`);
-
-  socket.on("message", (data) => {
-    socket.broadcast.emit("message:received", data);
-  });
+  console.log(`wow its a regular consolelog how about that socket`);
 
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left.`);
@@ -24,7 +21,5 @@ io.on("connection", (socket) => {
 });
 
 server.listen(3000, () => {
-  console.group("Chat server is running on 3000");
+  console.group("Server is running on 3000");
 });
-
-

@@ -13,10 +13,10 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} is connected`);
-  socket.emit("hello", "world");
 
   socket.on("roomCode", (arg) => {
-    console.log(arg); // world
+    console.log(arg); // the code
+    socket.emit("myCode", arg);
   });
 
   socket.on("disconnect", () => {

@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "..\\node-uno-js\\node_src"
+		},
+		{
+			"path": "..\\fullstack-frontend-code-blooded\\test\\client"
+		}
+	],
+	"settings": {}
+}

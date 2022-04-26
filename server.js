@@ -14,9 +14,18 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} is connected`);
 
-  socket.on("roomCode", (arg) => {
-    console.log(arg); // the code
-    socket.emit("myCode", arg);
+  socket.on("roomCode", async (arg) => {
+    try {
+      console.log(arg); // the code
+      socket.emit("myCode", "poop");
+    } catch (error) {
+      console.log(error);
+      callback({
+        status: "NOK",
+      });
+    }
+
+    //socket.emit("myCode", arg);
   });
 
   socket.on("disconnect", () => {
@@ -24,6 +33,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(3000, () => {
-  console.group("Server is running on 3000");
+server.listen(3001, () => {
+  console.group("Server is running on 3001");
 });

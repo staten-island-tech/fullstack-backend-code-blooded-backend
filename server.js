@@ -28,10 +28,9 @@ mongoose.connect(
         socket.join(data.myID);
       });
     });
-
-    Players.watch().on("change", (change) => {
+    /* Players.watch().on("change", (change) => {
       console.log("Something has changed");
       io.to(change.fullDocument._id).emit("changes", change.fullDocument);
-    });
+    }); */
   }
 );

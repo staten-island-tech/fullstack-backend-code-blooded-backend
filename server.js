@@ -13,6 +13,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} is connected`);
+  console.log(`user is connected`);
 
   // socket.on("roomCode", async (arg) => {
   //   try {

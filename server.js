@@ -15,23 +15,8 @@ io.on("connection", (socket) => {
   console.log(`user ${socket.id} is connected`);
   console.log(`user is connected`);
 
-  // socket.on("roomCode", async (arg) => {
-  //   try {
-  //     console.log(arg); // the code
-  //     socket.emit("myCode", "poop");
-  //   } catch (error) {
-  //     console.log(error);
-  //     callback({
-  //       status: "NOK",
-  //     });
-  //   }
-
-  //   //socket.emit("myCode", arg);
-  // });
-
-  socket.on("roomCode", (arg) => {
-    console.log(arg);
-    socket.emit("myCode", arg);
+  socket.on("testingEvent", (arg) => {
+    console.log("ok");
   });
 
   socket.on("disconnect", () => {

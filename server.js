@@ -11,12 +11,20 @@ const io = new Server(server, {
   },
 });
 
+const allUsers = [];
+
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} is connected`);
   console.log(`user is connected`);
+  socket.emit("urSocket", socket.id);
 
   socket.on("testingEvent", (arg) => {
     console.log("ok");
+  });
+
+  socket.on("addUser", (arg) => {
+    allUsers.push(arg);
+    console.log(allUsers);
   });
 
   socket.on("disconnect", () => {

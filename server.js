@@ -22,6 +22,10 @@ io.on("connection", (socket) => {
   let imHost = null;
   let roomInfoIndex = null;
 
+  // for the guest
+  let myRoom;
+  let guestInfoIndex = null;
+
   console.log(`user ${socket.id} is connected`);
   console.log(`user is connected`);
 
@@ -50,6 +54,8 @@ io.on("connection", (socket) => {
         "all the room info: " +
         roomsInfo
     );
+
+    io.to(code).emit("currentRoom", roomsInfo[roomInfoIndex]);
   });
 
   // time to check room existence woahh
@@ -64,25 +70,30 @@ io.on("connection", (socket) => {
 
     socket.join(code);
 
+    // which room u in
     hostRoomIndex = rooms.indexOf(code);
 
+    // adding roominfo to roominfo
     let addRoomInfo = [username, hostStatus];
-    roomsInfo[hostRoomIndex].push(addRoomInfo);
+    myRoom = roomsInfo[hostRoomIndex];
+    myRoom.push(addRoomInfo);
 
     let oneUser = [username, socket.id, code];
     allUsers.push(oneUser);
     userIndex = allUsers.lastIndexOf(oneUser);
 
-    roomInfoIndex = roomsInfo[hostRoomIndex].lastIndexOf(addRoomInfo);
+    // in the room array, position of the guest info
+    guestInfoIndex = myRoom.lastIndexOf(addRoomInfo);
 
     console.log(
-      "these are the rooms: " +
+      " //these are the rooms:// " +
         rooms +
-        "these are all the users: " +
+        " //these are all the users:// " +
         allUsers +
-        "all the room info: " +
+        " //all the room info:// " +
         roomsInfo
     );
+    io.to(code).emit("currentRoom", roomsInfo[hostRoomIndex]);
   });
 
   socket.on("disconnect", () => {
@@ -93,16 +104,15 @@ io.on("connection", (socket) => {
       rooms.splice(hostRoomIndex, 1);
       roomsInfo.splice(hostRoomIndex, 1);
     } else {
-      let roomPosition = roomsInfo[hostRoomIndex];
-      roomPosition.splice(roomInfoIndex, 1);
+      myRoom.splice(guestInfoIndex, 1);
     }
 
     console.log(
-      "these are the rooms: " +
+      " //these are the rooms:// " +
         rooms +
-        "these are all the users: " +
+        " //these are all the users:// " +
         allUsers +
-        "all the room info: " +
+        " //all the room info:// " +
         roomsInfo
     );
   });

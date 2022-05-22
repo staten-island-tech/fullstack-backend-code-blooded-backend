@@ -12,18 +12,16 @@ const io = new Server(server, {
 });
 
 let rooms = [];
-let allUsers = [];
 let roomsInfo = [];
 
 io.on("connection", (socket) => {
-  // my code looks like a mess heres my attempt to fix it smh
+  // index of the room in "rooms"
   let hostRoomIndex = null;
-  let userIndex = null;
+
   let imHost = null;
   let roomInfoIndex = null;
 
   // for the guest
-  let myRoom;
   let guestInfoIndex = null;
 
   console.log(`user ${socket.id} is connected`);
@@ -31,28 +29,24 @@ io.on("connection", (socket) => {
 
   // placing the host that is
   socket.on("placeHost", (username, code, hostStatus) => {
+    // sets host status
     imHost = hostStatus;
 
+    // joining and pushing room code into room
     socket.join(code);
     rooms.push(code);
 
-    let addRoomInfo = [code, [username, hostStatus]];
+    // pushing array with username into room info
+    let addRoomInfo = [username];
     roomsInfo.push(addRoomInfo);
 
-    let oneUser = [username, socket.id, code];
-    allUsers.push(oneUser);
-
+    // index of the room in "rooms"
     hostRoomIndex = rooms.lastIndexOf(code);
-    userIndex = allUsers.lastIndexOf(oneUser);
+    // index of the array of usernames (specific room) in roomInfo
     roomInfoIndex = roomsInfo.lastIndexOf(addRoomInfo);
 
     console.log(
-      "these are the rooms: " +
-        rooms +
-        "these are all the users: " +
-        allUsers +
-        "all the room info: " +
-        roomsInfo
+      "these are the rooms: " + rooms + "all the room info: " + roomsInfo
     );
 
     io.to(code).emit("currentRoom", roomsInfo[roomInfoIndex]);
@@ -74,44 +68,39 @@ io.on("connection", (socket) => {
     hostRoomIndex = rooms.indexOf(code);
 
     // adding roominfo to roominfo
-    let addRoomInfo = [username, hostStatus];
-    myRoom = roomsInfo[hostRoomIndex];
-    myRoom.push(addRoomInfo);
+    roomsInfo[hostRoomIndex].push(username);
 
-    let oneUser = [username, socket.id, code];
-    allUsers.push(oneUser);
-    userIndex = allUsers.lastIndexOf(oneUser);
-
-    // in the room array, position of the guest info
-    guestInfoIndex = myRoom.lastIndexOf(addRoomInfo);
+    // in the array of usernames in a room, position of the guest username
+    let myRoom = roomsInfo[hostRoomIndex];
+    guestInfoIndex = myRoom.length - 1;
 
     console.log(
       " //these are the rooms:// " +
         rooms +
-        " //these are all the users:// " +
-        allUsers +
         " //all the room info:// " +
         roomsInfo
     );
     io.to(code).emit("currentRoom", roomsInfo[hostRoomIndex]);
   });
 
+  // chat mech here
+  socket.on("message", (message, code) => {
+    io.to(code).emit("message-received", message);
+  });
+
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left.`);
-    allUsers.splice(userIndex, 1);
 
     if (imHost === true) {
       rooms.splice(hostRoomIndex, 1);
       roomsInfo.splice(hostRoomIndex, 1);
     } else {
-      myRoom.splice(guestInfoIndex, 1);
+      roomsInfo[hostRoomIndex].splice(guestInfoIndex, 1);
     }
 
     console.log(
       " //these are the rooms:// " +
         rooms +
-        " //these are all the users:// " +
-        allUsers +
         " //all the room info:// " +
         roomsInfo
     );

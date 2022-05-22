@@ -11,20 +11,29 @@ const io = new Server(server, {
   },
 });
 
-const allUsers = [];
+let rooms = [];
+let allUsers = [];
 
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} is connected`);
   console.log(`user is connected`);
   socket.emit("urSocket", socket.id);
 
-  socket.on("testingEvent", (arg) => {
-    console.log("ok");
+  // placing the host that is
+  socket.on("placeUser", (username, code) => {
+    socket.join(code);
+    rooms.push(code);
+    allUsers.push([username, socket.id, code]);
+    console.log(
+      "these are rooms: " + rooms + "     these are users: " + allUsers
+    );
+    socket.emit("userList", allUsers);
   });
 
-  socket.on("addUser", (arg) => {
-    allUsers.push(arg);
-    console.log(allUsers);
+  // time to check room existence woahh
+  socket.on("checkRoom", (arg) => {
+    let verified = rooms.includes(arg);
+    socket.emit("checked", verified);
   });
 
   socket.on("disconnect", () => {

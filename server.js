@@ -1,6 +1,6 @@
 const express = require("express");
 const http = require("http");
-const { Server } = require("socket.io");
+const { Server, Socket } = require("socket.io");
 
 const app = express();
 const server = http.createServer(app);
@@ -13,27 +13,43 @@ const io = new Server(server, {
 
 let rooms = [];
 let allUsers = [];
+let roomsInfo = [];
 
 io.on("connection", (socket) => {
-  let hostRoom = null;
+  // my code looks like a mess heres my attempt to fix it smh
+  let hostRoomIndex = null;
   let userIndex = null;
+  let imHost = null;
+  let roomInfoIndex = null;
+
   console.log(`user ${socket.id} is connected`);
   console.log(`user is connected`);
-  socket.emit("urSocket", socket.id);
 
   // placing the host that is
-  socket.on("placeUser", (username, code) => {
+  socket.on("placeHost", (username, code, hostStatus) => {
+    imHost = hostStatus;
+
     socket.join(code);
     rooms.push(code);
+
+    let addRoomInfo = [code, [username, hostStatus]];
+    roomsInfo.push(addRoomInfo);
+
     let oneUser = [username, socket.id, code];
     allUsers.push(oneUser);
-    console.log(
-      "these are rooms: " + rooms + "     these are users: " + allUsers
-    );
-    socket.emit("userList", allUsers);
 
-    hostRoom = rooms.lastIndexOf(code);
+    hostRoomIndex = rooms.lastIndexOf(code);
     userIndex = allUsers.lastIndexOf(oneUser);
+    roomInfoIndex = roomsInfo.lastIndexOf(addRoomInfo);
+
+    console.log(
+      "these are the rooms: " +
+        rooms +
+        "these are all the users: " +
+        allUsers +
+        "all the room info: " +
+        roomsInfo
+    );
   });
 
   // time to check room existence woahh
@@ -42,10 +58,53 @@ io.on("connection", (socket) => {
     socket.emit("checked", verified);
   });
 
+  // placing the guest in a room
+  socket.on("placeGuest", (username, code, hostStatus) => {
+    imHost = hostStatus;
+
+    socket.join(code);
+
+    hostRoomIndex = rooms.indexOf(code);
+
+    let addRoomInfo = [username, hostStatus];
+    roomsInfo[hostRoomIndex].push(addRoomInfo);
+
+    let oneUser = [username, socket.id, code];
+    allUsers.push(oneUser);
+    userIndex = allUsers.lastIndexOf(oneUser);
+
+    roomInfoIndex = roomsInfo[hostRoomIndex].lastIndexOf(addRoomInfo);
+
+    console.log(
+      "these are the rooms: " +
+        rooms +
+        "these are all the users: " +
+        allUsers +
+        "all the room info: " +
+        roomsInfo
+    );
+  });
+
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left.`);
-    rooms.splice(hostRoom, 1);
     allUsers.splice(userIndex, 1);
+
+    if (imHost === true) {
+      rooms.splice(hostRoomIndex, 1);
+      roomsInfo.splice(hostRoomIndex, 1);
+    } else {
+      let roomPosition = roomsInfo[hostRoomIndex];
+      roomPosition.splice(roomInfoIndex, 1);
+    }
+
+    console.log(
+      "these are the rooms: " +
+        rooms +
+        "these are all the users: " +
+        allUsers +
+        "all the room info: " +
+        roomsInfo
+    );
   });
 });
 

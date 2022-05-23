@@ -84,8 +84,8 @@ io.on("connection", (socket) => {
   });
 
   // chat mech here
-  socket.on("message", (message, code) => {
-    io.to(code).emit("message-received", message);
+  socket.on("myMessage", (message, code) => {
+    io.to(code).emit("newMessage", message);
   });
 
   socket.on("disconnect", () => {
@@ -95,7 +95,7 @@ io.on("connection", (socket) => {
       rooms.splice(hostRoomIndex, 1);
       roomsInfo.splice(hostRoomIndex, 1);
     } else {
-      roomsInfo[hostRoomIndex].splice(guestInfoIndex, 1);
+      // roomsInfo[hostRoomIndex].splice(guestInfoIndex, 1);
     }
 
     console.log(

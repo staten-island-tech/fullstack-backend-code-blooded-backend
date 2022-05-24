@@ -20,6 +20,7 @@ io.on("connection", (socket) => {
 
   let imHost = null;
   let roomInfoIndex = null;
+  let myRoomCode = null;
 
   // for the guest
   let guestInfoIndex = null;
@@ -31,6 +32,7 @@ io.on("connection", (socket) => {
   socket.on("placeHost", (username, code, hostStatus) => {
     // sets host status
     imHost = hostStatus;
+    myRoomCode = code;
 
     // joining and pushing room code into room
     socket.join(code);
@@ -61,6 +63,7 @@ io.on("connection", (socket) => {
   // placing the guest in a room
   socket.on("placeGuest", (username, code, hostStatus) => {
     imHost = hostStatus;
+    myRoomCode = code;
 
     socket.join(code);
 
@@ -92,10 +95,15 @@ io.on("connection", (socket) => {
     console.log(`user ${socket.id} left.`);
 
     if (imHost === true) {
-      rooms.splice(hostRoomIndex, 1);
-      roomsInfo.splice(hostRoomIndex, 1);
+      let myRoomIndex = rooms.indexOf(myRoomCode);
+      rooms.splice(myRoomIndex, 1);
+      roomsInfo.splice(myRoomIndex, 1);
     } else {
-      // roomsInfo[hostRoomIndex].splice(guestInfoIndex, 1);
+      if (rooms.includes(myRoomCode)) {
+        let myRoomIndex = rooms.indexOf(myRoomCode);
+        roomsInfo[myRoomIndex].splice(guestInfoIndex, 1);
+        console.log("testing" + roomsInfo);
+      }
     }
 
     console.log(

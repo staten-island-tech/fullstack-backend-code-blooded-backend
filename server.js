@@ -57,7 +57,13 @@ io.on("connection", (socket) => {
   // time to check room existence woahh
   socket.on("checkRoom", (arg) => {
     let verified = rooms.includes(arg);
-    socket.emit("checked", verified);
+
+    let myRoomIndex = rooms.indexOf(myRoomCode) + 1;
+    // console.log(myRoomIndex);
+    let thisRoom = roomsInfo[myRoomIndex];
+    let full = thisRoom.length > 3;
+
+    socket.emit("checked", verified, full);
   });
 
   // placing the guest in a room

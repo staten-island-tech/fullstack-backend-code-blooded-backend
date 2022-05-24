@@ -97,6 +97,11 @@ io.on("connection", (socket) => {
     io.to(code).emit("newMessage", message);
   });
 
+  // game is startingg
+  socket.on("startGame", (status) => {
+    io.to(myRoomCode).emit("startNow", status);
+  });
+
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left.`);
 

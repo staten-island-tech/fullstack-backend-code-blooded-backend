@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
     let myRoomIndex = rooms.indexOf(myRoomCode) + 1;
     // console.log(myRoomIndex);
     let thisRoom = roomsInfo[myRoomIndex];
-    let full = (thisRoom.length = 2);
+    let full = thisRoom.length > 3;
 
     socket.emit("checked", verified, full);
   });

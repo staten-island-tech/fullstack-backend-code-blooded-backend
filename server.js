@@ -94,7 +94,8 @@ io.on("connection", (socket) => {
 
   // chat mech here
   socket.on("myMessage", (message, code) => {
-    io.to(code).emit("newMessage", message);
+    let myRoomIndex = rooms.indexOf(myRoomCode);
+    io.to(code).emit("newMessage", message, roomsInfo[myRoomIndex]);
   });
 
   // game is startingg

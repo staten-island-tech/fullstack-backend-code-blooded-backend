@@ -102,15 +102,7 @@ io.on("connection", (socket) => {
   socket.on("startGame", (status) => {
     io.to(myRoomCode).emit("startNow", status);
   });
-  /* socket.on("initGameState", (gameState) => {
-    const user = getUser(socket.id);
-    if (user) io.to(user.room).emit("initGameState", gameState);
-  });
 
-  socket.on("updateGameState", (gameState) => {
-    const user = getUser(socket.id);
-    if (user) io.to(user.room).emit("updateGameState", gameState);
-  }); */
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left.`);
 

@@ -92,7 +92,7 @@ io.on("connection", (socket) => {
     io.to(code).emit("currentRoom", roomsInfo[hostRoomIndex]);
   });
 
-  socket.on("initGameState", (gameState) => {
+  /* socket.on("initGameState", (gameState) => {
     const user = getUser(socket.id);
     if (user) io.to(user.room).emit("initGameState", gameState);
   });
@@ -101,7 +101,7 @@ io.on("connection", (socket) => {
     const user = getUser(socket.id);
     if (user) io.to(user.room).emit("updateGameState", gameState);
   });
-
+ */
   // chat mech here
   socket.on("myMessage", (message, code) => {
     let myRoomIndex = rooms.indexOf(myRoomCode);

@@ -25,6 +25,10 @@ io.on("connection", (socket) => {
   // for the guest
   let guestInfoIndex = null;
 
+  // for game mech ig
+  let myHand = null;
+  let mainDeck = null;
+
   console.log(`user ${socket.id} is connected`);
   console.log(`user is connected`);
 
@@ -48,7 +52,10 @@ io.on("connection", (socket) => {
     roomInfoIndex = roomsInfo.lastIndexOf(addRoomInfo);
 
     console.log(
-      "these are the rooms: " + rooms + "all the room info: " + roomsInfo
+      " //these are the rooms:// " +
+        rooms +
+        " //all the room info:// " +
+        roomsInfo
     );
 
     io.to(code).emit("currentRoom", roomsInfo[roomInfoIndex]);
@@ -101,6 +108,13 @@ io.on("connection", (socket) => {
   // game is startingg
   socket.on("startGame", (status) => {
     io.to(myRoomCode).emit("startNow", status);
+  });
+
+  // painful start of actual game mech idek
+  socket.on("updateDeck", (myHand, remainDeck) => {
+    myHand = myHand;
+    mainDeck = remainDeck;
+    io.to(myRoomCode).emit("drawInitial", remainDeck);
   });
 
   socket.on("disconnect", () => {

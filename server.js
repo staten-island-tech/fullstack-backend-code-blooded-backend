@@ -130,6 +130,10 @@ io.on("connection", (socket) => {
     console.log("total remains : " + remainDeck.length);
   });
 
+  socket.on("testing", (argg) => {
+    console.log(argg);
+  });
+
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left.`);
 

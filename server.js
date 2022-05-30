@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
     let myRoomIndex = rooms.indexOf(myRoomCode) + 1;
     // console.log(myRoomIndex);
     let thisRoom = roomsInfo[myRoomIndex];
-    let full = thisRoom.length > 3;
+    let full = (thisRoom.length = 2);
 
     socket.emit("checked", verified, full);
   });
@@ -101,6 +101,14 @@ io.on("connection", (socket) => {
   // game is startingg
   socket.on("startGame", (status) => {
     io.to(myRoomCode).emit("startNow", status);
+  });
+
+  socket.on("initGameState", (gameState, myRoomCode) => {
+    io.to(myRoomCode).emit("initGameState", gameState, myRoomCode);
+  });
+
+  socket.on("updateGameState", (gameState, myRoomCode) => {
+    io.to(myRoomCode).emit("updateGameState", gameState, myRoomCode);
   });
 
   socket.on("disconnect", () => {

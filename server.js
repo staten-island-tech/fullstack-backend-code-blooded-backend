@@ -18,6 +18,7 @@ io.on("connection", (socket) => {
   // index of the room in "rooms"
   let hostRoomIndex = null;
 
+  let username = null;
   let imHost = null;
   let roomInfoIndex = null;
   let myRoomCode = null;
@@ -37,6 +38,7 @@ io.on("connection", (socket) => {
     // sets host status
     imHost = hostStatus;
     myRoomCode = code;
+    username = username;
 
     // joining and pushing room code into room
     socket.join(code);
@@ -77,6 +79,7 @@ io.on("connection", (socket) => {
   socket.on("placeGuest", (username, code, hostStatus) => {
     imHost = hostStatus;
     myRoomCode = code;
+    username = username;
 
     socket.join(code);
 

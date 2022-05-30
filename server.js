@@ -116,7 +116,7 @@ io.on("connection", (socket) => {
   // painful start of actual game mech idek
 
   // first 7 cards of host
-  socket.on("updateDeck", (myHand, remainDeck) => {
+  socket.on("hostHand", (myHand, remainDeck) => {
     myHand = myHand;
     mainDeck = remainDeck;
     io.to(myRoomCode).emit("drawInitial", remainDeck);
@@ -126,7 +126,8 @@ io.on("connection", (socket) => {
   socket.on("updateAll", (myHand, remainDeck) => {
     myHand = myHand;
     mainDeck = remainDeck;
-    io.to(myRoomCode).emit("hostInitial", remainDeck);
+    io.to(myRoomCode).emit("hostStart", remainDeck);
+    console.log("total remains : " + remainDeck.length);
   });
 
   socket.on("disconnect", () => {

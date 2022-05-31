@@ -109,8 +109,8 @@ io.on("connection", (socket) => {
   });
 
   // game is startingg
-  socket.on("startGame", (status) => {
-    io.to(myRoomCode).emit("startNow", status);
+  socket.on("startGame", (status, card) => {
+    io.to(myRoomCode).emit("startNow", status, card);
   });
 
   // painful start of actual game mech idek
@@ -134,6 +134,11 @@ io.on("connection", (socket) => {
     console.log(argg);
   });
 
+  socket.on("gameUpdate", (table, order, deck) => {
+    io.to(myRoomCode).emit("updateNow", table, order, deck);
+  });
+
+  // disconnecting the socket
   socket.on("disconnect", () => {
     console.log(`user ${socket.id} left.`);
 

@@ -108,36 +108,7 @@ io.on("connection", (socket) => {
     io.to(code).emit("newMessage", message, roomsInfo[myRoomIndex]);
   });
 
-  // game is startingg
-  socket.on("startGame", (status, card) => {
-    io.to(myRoomCode).emit("startNow", status, card);
-  });
-
-  // painful start of actual game mech idek
-
-  // first 7 cards of host
-  socket.on("hostHand", (myHand, remainDeck) => {
-    myHand = myHand;
-    mainDeck = remainDeck;
-    io.to(myRoomCode).emit("drawInitial", remainDeck);
-  });
-
-  // first 7 cards of guest
-  socket.on("updateAll", (myHand, remainDeck) => {
-    myHand = myHand;
-    mainDeck = remainDeck;
-    io.to(myRoomCode).emit("hostStart", remainDeck);
-    console.log("total remains : " + remainDeck.length);
-  });
-
-  socket.on("testing", (argg) => {
-    console.log(argg);
-  });
-
-  socket.on("gameUpdate", (table, order, deck) => {
-    console.log("server got game update");
-    io.to(myRoomCode).emit("updateNow", table, order, deck);
-  });
+  // ha im redoing game mech one card play
 
   // disconnecting the socket
   socket.on("disconnect", () => {

@@ -135,6 +135,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("gameUpdate", (table, order, deck) => {
+    console.log("server got game update");
     io.to(myRoomCode).emit("updateNow", table, order, deck);
   });
 

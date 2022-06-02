@@ -27,8 +27,8 @@ io.on("connection", (socket) => {
   let guestInfoIndex = null;
 
   // for game mech ig
-  let myHand = null;
-  let mainDeck = null;
+  let firstCard = null;
+  let myCards = null;
 
   console.log(`user ${socket.id} is connected`);
   console.log(`user is connected`);
@@ -109,6 +109,32 @@ io.on("connection", (socket) => {
   });
 
   // ha im redoing game mech one card play
+
+  // first card is drawn for the host
+  socket.on("firstCard", (firstCard, cardData, remainDeck) => {
+    firstCard = firstCard;
+    myCards = [firstCard];
+    io.to(myRoomCode).emit("guestDraw", cardData, remainDeck);
+  });
+
+  // first card is drawn for the guest
+  socket.on("myDraw", (myCard, drawnData, remainDeck) => {
+    firstCard = myCard;
+    myCards = [myCard];
+    io.to(myRoomCode).emit("checkStart", myCard, drawnData, remainDeck);
+  });
+
+  //telling the guest that the game is starting
+  socket.on("realStart", (inRoom, gameTime, allDrawn, table, remainDeck) => {
+    io.to(myRoomCode).emit(
+      "frStart",
+      inRoom,
+      gameTime,
+      allDrawn,
+      table,
+      remainDeck
+    );
+  });
 
   // disconnecting the socket
   socket.on("disconnect", () => {

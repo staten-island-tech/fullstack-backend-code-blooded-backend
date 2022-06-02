@@ -109,9 +109,13 @@ io.on("connection", (socket) => {
   });
 
   // ha im redoing game mech one card play
-  socket.on("played", (move)=>{
+  socket.on("played", (move) => {
+    console.log("move recieved");
     io.to(myRoomCode).emit("newMove", move);
-  })
+  });
+  socket.on("ending", (win, game) => {
+    io.to(myRoomCode).emit("done", win, game);
+  });
 
   // first card is drawn for the host
   socket.on("firstCard", (firstCard, cardData, remainDeck) => {
